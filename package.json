@@ -1,0 +1,12 @@
+{
+  "name": "gamer-xmd-deploy",
+  "version": "1.0.0",
+  "description": "Déploiement facile de bot GAMER-XMD",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
