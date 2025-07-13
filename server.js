@@ -1,63 +1,49 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
-const app = express();
-const os = require('os');
+const { exec } = require('child_process'); // 👈 Ajout important
 
+const app = express();
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
-app.post('/deploy', async (req, res) => {
+app.post('/deploy', (req, res) => {
   const { session, botname, number } = req.body;
 
   if (!session || !botname || !number) {
     return res.status(400).json({ success: false, message: "❗ Champs manquants." });
   }
 
-  try {
-    // 📦 Étape 1 : Cloner le repo du bot
-    const tempDir = path.join(os.tmpdir(), `XMD-${Date.now()}`);
-    execSync(`git clone https://github.com/darkVador221/Inco_dark "${tempDir}"`);
-
-    // 📝 Étape 2 : Créer le .env avec les données du formulaire
-    const envContent = `
+  const envContent = `
 SESSION_ID="${session}"
 OWNER_NAME="${botname}"
 OWNER_NUMBER="${number}"
 AUTO_READ_STATUS=true
 STATUS_READ_MSG="*Status vu par ${botname}*"
-AUTO_STATUS_REPLY=false
-AUTO_REJECT_CALLS=false
 MODE="public"
-WELCOME=false
-AUTO_READ_MESSAGES=false
-AUTO_TYPING=false
-AUTO_RECORDING=false
-ALWAYS_ONLINE=false
 AUTO_BLOCK=true
-AUTO_REACT=false
-PREFIX="."
-    `.trim();
+`.trim();
 
-    fs.writeFileSync(path.join(tempDir, '.env'), envContent);
+  try {
+    fs.writeFileSync(path.join(__dirname, '.env'), envContent);
 
-    // 📦 Étape 3 : Installer les dépendances
-    execSync(`cd "${tempDir}" && npm install`, { stdio: 'inherit' });
-
-    // 🚀 Étape 4 : Lancer le bot avec PM2
-    execSync(`cd "${tempDir}" && pm2 start index.js --name "GAMER-XMD-${Date.now()}"`, {
-      stdio: 'inherit'
+    // 👇 Exécute le script de déploiement automatique
+    exec('sh ./start-bot.sh', (error, stdout, stderr) => {
+      if (error) {
+        console.error("❌ Erreur lors du lancement du bot :", error);
+        return res.json({ success: false, message: "Erreur lors du lancement du bot." });
+      }
+      console.log("✅ Script de démarrage exécuté.");
+      return res.json({ success: true });
     });
 
-    res.json({ success: true });
   } catch (err) {
-    console.error("❌ Erreur de déploiement :", err);
-    res.status(500).json({ success: false, message: "Erreur : " + err.message });
+    console.error("❌ Erreur écriture .env:", err);
+    return res.status(500).json({ success: false, message: "Erreur d'écriture : " + err.message });
   }
 });
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🟢 Serveur GAMER-XMD-DEPLOY actif sur http://localhost:${PORT}`);
+  console.log(`🟢 Serveur actif sur http://localhost:${PORT}`);
 });
