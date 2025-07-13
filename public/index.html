@@ -18,7 +18,7 @@
       justify-content: center;
     }
     .form-container {
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(0, 0, 0, 0.75);
       padding: 30px;
       border-radius: 10px;
       max-width: 500px;
@@ -38,25 +38,28 @@
       margin-top: 8px;
       border: none;
       border-radius: 5px;
+      font-family: 'Orbitron', sans-serif;
     }
     button {
       margin-top: 20px;
       background-color: #00ff99;
+      color: black;
       font-weight: bold;
       border: none;
       padding: 12px;
       border-radius: 5px;
       cursor: pointer;
     }
-    .footer {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 12px;
-    }
     #result {
       text-align: center;
       margin-top: 15px;
       font-weight: bold;
+      font-size: 14px;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 12px;
     }
   </style>
 </head>
@@ -64,13 +67,13 @@
   <div class="form-container">
     <h1>🚀 Déployer votre bot WhatsApp</h1>
     <form id="deployForm">
-      <label>Nom du Bot</label>
+      <label for="botname">Nom du Bot</label>
       <input id="botname" name="botname" type="text" required placeholder="Ex : XMD-BOT" />
 
-      <label>Numéro du Propriétaire</label>
+      <label for="number">Numéro du Propriétaire</label>
       <input id="number" name="number" type="text" required placeholder="Ex : 221701234567" />
 
-      <label>Session ID</label>
+      <label for="session">Session ID</label>
       <textarea id="session" name="session" rows="4" required placeholder="Collez votre SESSION_ID ici..."></textarea>
 
       <button type="submit">Déployer Maintenant</button>
