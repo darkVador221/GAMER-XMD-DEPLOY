@@ -41,7 +41,8 @@ AUTO_BLOCK=true
   }
 });
 
+// ⛳ Adapter pour Railway (PORT dynamique)
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🟢 Serveur en ligne sur http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🟢 Serveur en ligne sur le port ${PORT}`);
 });
