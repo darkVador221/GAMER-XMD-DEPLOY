@@ -6,15 +6,16 @@ rm -rf inco_bot
 echo "🔁 Clonage du dépôt du bot..."
 git clone https://github.com/darkVador221/Inco_dark.git inco_bot
 
-echo "📦 Copie du fichier .env..."
+echo "📦 Copie du .env généré..."
 cp .env inco_bot/.env
 
-echo "📂 Entrée dans le dossier du bot..."
+echo "📂 Accès au dossier du bot..."
 cd inco_bot
 
 echo "📥 Installation des dépendances..."
 npm install
 
 echo "🚀 Lancement du bot..."
-node index.js > ../bot.log 2>&1 &
-echo "✅ Bot lancé avec succès en arrière-plan."
+nohup node index.js > ../bot.log 2>&1 &
+
+echo "✅ Bot lancé avec succès."
