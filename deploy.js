@@ -1,33 +1,27 @@
-document.getElementById("deployForm").addEventListener("submit", async function (e) {
+document.getElementById('deploy-form').addEventListener('submit', async (e) => {
   e.preventDefault();
+  const form = new FormData(e.target);
+  const session = form.get('session');
+  const botname = form.get('botname');
+  const number = form.get('number');
 
-  const botname = document.getElementById("botname").value.trim();
-  const owner = document.getElementById("owner").value.trim();
-  const session = document.getElementById("session").value.trim();
+  const result = document.getElementById('result');
+  result.innerText = "⏳ Déploiement en cours...";
 
-  const envContent = `SESSION_ID="${session}"
-OWNER_NAME="${botname}"
-OWNER_NUMBER="${owner}"
-MODE="public"
-WELCOME=false
-AUTO_READ_STATUS=true
-STATUS_READ_MSG="*Status Seen By ${botname} ⚡*"
-AUTO_STATUS_REPLY=false
-AUTO_REJECT_CALLS=false
-AUTO_READ_MESSAGES=false
-AUTO_TYPING=false
-AUTO_RECORDING=false
-ALWAYS_ONLINE=false
-AUTO_BLOCK=true
-AUTO_REACT=false
-PREFIX="."`;
+  try {
+    const res = await fetch('/deploy', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session, botname, number }),
+    });
+    const data = await res.json();
 
-  const blob = new Blob([envContent], { type: "text/plain" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `${botname.replace(/\s+/g, "_")}.env`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+    if (data.success) {
+      result.innerText = "✅ Déploiement réussi ! Votre bot est prêt à l’emploi.";
+    } else {
+      result.innerText = "❌ Erreur pendant le déploiement : " + data.message;
+    }
+  } catch (err) {
+    result.innerText = "❌ Erreur serveur : " + err.message;
+  }
 });
