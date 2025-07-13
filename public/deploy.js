@@ -4,14 +4,16 @@ document.getElementById('deployForm').addEventListener('submit', async (e) => {
   const session = document.getElementById('session').value.trim();
   const botname = document.getElementById('botname').value.trim();
   const number = document.getElementById('number').value.trim();
-  const result = document.getElementById('result') || document.createElement('p');
-  
+  const result = document.getElementById('result');
+
   if (!session || !botname || !number) {
     result.innerText = "❗ Merci de remplir tous les champs.";
+    result.style.color = "orange";
     return;
   }
 
   result.innerText = "⏳ Déploiement en cours...";
+  result.style.color = "#00ffff";
 
   try {
     const res = await fetch('/deploy', {
@@ -24,15 +26,13 @@ document.getElementById('deployForm').addEventListener('submit', async (e) => {
 
     if (data.success) {
       result.innerText = "✅ Déploiement réussi ! Votre bot est actif.";
+      result.style.color = "#00ff99";
     } else {
       result.innerText = "❌ Erreur : " + data.message;
+      result.style.color = "red";
     }
   } catch (err) {
     result.innerText = "❌ Erreur serveur : " + err.message;
-  }
-
-  if (!document.getElementById('result')) {
-    document.getElementById('deployForm').appendChild(result);
-    result.id = "result";
+    result.style.color = "red";
   }
 });
